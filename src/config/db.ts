@@ -1,15 +1,15 @@
-import "dotenv/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
-import { PrismaClient } from "../generated/prisma/client";
+import 'dotenv/config';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import { PrismaClient } from '../generated/prisma/client';
 
-const databaseUrl = process.env["DATABASE_URL"];
+const databaseUrl = process.env['DATABASE_URL'];
 
 if (!databaseUrl) {
-  throw new Error("DATABASE_URL environment variable is not set");
+  throw new Error('DATABASE_URL environment variable is not set');
 }
 
-const isProduction = process.env.NODE_ENV === "Production";
+const isProduction = process.env.NODE_ENV === 'Production';
 
 // Initialize the native PostgreSQL connection pool
 const pool = new Pool({
@@ -25,7 +25,7 @@ const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({
   adapter,
-  log: isProduction ? ["error"] : ["query", "error", "warn"],
+  log: isProduction ? ['error'] : ['query', 'error', 'warn'],
 });
 
 let isConnected = false;
@@ -36,25 +36,25 @@ let isConnected = false;
  */
 export const connectDB = async (): Promise<PrismaClient> => {
   if (isConnected) {
-    console.log("✅ Using existing Prisma connection");
+    console.log('✅ Using existing Prisma connection');
     return prisma;
   }
 
   try {
     await prisma.$queryRaw`SELECT 1`;
     isConnected = true;
-    console.log("🎯 Prisma connected to PostgreSQL database");
+    console.log('🎯 Prisma connected to PostgreSQL database');
     return prisma;
   } catch (error: unknown) {
     const err = error as { message?: string; code?: string };
-    console.error("❌ Prisma connection error:", err.message);
+    console.error('❌ Prisma connection error:', err.message);
 
-    if (err.code === "P1001") {
+    if (err.code === 'P1001') {
       console.error(
-        "❌ Cannot reach database server. Check if PostgreSQL is running and DATABASE_URL is correct.",
+        '❌ Cannot reach database server. Check if PostgreSQL is running and DATABASE_URL is correct.'
       );
-    } else if (err.code === "P1017") {
-      console.error("❌ Database connection was closed. Check your credentials.");
+    } else if (err.code === 'P1017') {
+      console.error('❌ Database connection was closed. Check your credentials.');
     }
 
     isConnected = false;
@@ -80,7 +80,7 @@ export const checkConnection = async (): Promise<{
   } catch (error: unknown) {
     isConnected = false;
     const err = error as { message?: string };
-    return { connected: false, error: err.message ?? "Unknown error" };
+    return { connected: false, error: err.message ?? 'Unknown error' };
   }
 };
 
@@ -92,16 +92,16 @@ export const disconnectDB = async (): Promise<void> => {
   await prisma.$disconnect();
   await pool.end();
   isConnected = false;
-  console.log("✅ Prisma and PostgreSQL pool connections closed");
+  console.log('✅ Prisma and PostgreSQL pool connections closed');
 };
 
 // Graceful shutdown hooks
-process.on("SIGTERM", async () => {
+process.on('SIGTERM', async () => {
   await disconnectDB();
   process.exit(0);
 });
 
-process.on("SIGINT", async () => {
+process.on('SIGINT', async () => {
   await disconnectDB();
   process.exit(0);
 });

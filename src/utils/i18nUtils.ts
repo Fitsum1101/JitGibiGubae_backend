@@ -1,12 +1,12 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "node:url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const MODULES_DIR = path.join(__dirname, "../modules");
-const GLOBAL_LOCALES_DIR = path.join(__dirname, "../locales");
+const MODULES_DIR = path.join(__dirname, '../modules');
+const GLOBAL_LOCALES_DIR = path.join(__dirname, '../locales');
 
 /**
  * Get all modules that have a 'locales' folder
@@ -15,7 +15,7 @@ const GLOBAL_LOCALES_DIR = path.join(__dirname, "../locales");
 export const getModulesWithLocales = (): string[] => {
   if (!fs.existsSync(MODULES_DIR)) return [];
   return fs.readdirSync(MODULES_DIR).filter((folder) => {
-    const localesPath = path.join(MODULES_DIR, folder, "locales");
+    const localesPath = path.join(MODULES_DIR, folder, 'locales');
     return fs.existsSync(localesPath) && fs.statSync(localesPath).isDirectory();
   });
 };
@@ -45,7 +45,7 @@ export const getLocaleFilePath = (lng: string, ns: string): string => {
 
   // 1️⃣ Module-specific
   if (MODULES.includes(ns)) {
-    const modulePath = path.join(MODULES_DIR, ns, "locales", `${lng}.json`);
+    const modulePath = path.join(MODULES_DIR, ns, 'locales', `${lng}.json`);
     if (fs.existsSync(modulePath)) return modulePath;
   }
 
@@ -56,5 +56,5 @@ export const getLocaleFilePath = (lng: string, ns: string): string => {
   }
 
   // 3️⃣ Empty fallback
-  return path.join(GLOBAL_LOCALES_DIR, "empty.json");
+  return path.join(GLOBAL_LOCALES_DIR, 'empty.json');
 };

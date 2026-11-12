@@ -1,1 +1,1 @@
-export type BooleanLike = boolean | "true" | "false";
+export type BooleanLike = boolean | 'true' | 'false';

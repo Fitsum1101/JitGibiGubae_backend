@@ -1,16 +1,16 @@
-import type { Response, NextFunction, RequestHandler } from "express";
-import { StatusCodes } from "http-status-codes";
+import type { Response, NextFunction, RequestHandler } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
-import { prisma } from "../config/db";
-import type { AuthenticatedRequest } from "../types/authMiddleare";
-import { ApiError } from "../utils/apiError";
-import { verifyAccessToken } from "../utils/jwtToken";
-import { extractToken } from "../utils/token";
+import { prisma } from '../config/db';
+import type { AuthenticatedRequest } from '../types/authMiddleare';
+import { ApiError } from '../utils/apiError';
+import { verifyAccessToken } from '../utils/jwtToken';
+import { extractToken } from '../utils/token';
 
 const authenticate: RequestHandler = async (
   req: AuthenticatedRequest,
   _res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const token = extractToken(req);
@@ -19,9 +19,8 @@ const authenticate: RequestHandler = async (
       return next(
         new ApiError(
           StatusCodes.UNAUTHORIZED,
-          req.t?.("auth.access_denied_no_token") ||
-            "Access denied, no token provided",
-        ),
+          req.t?.('auth.access_denied_no_token') || 'Access denied, no token provided'
+        )
       );
     }
 
@@ -34,10 +33,7 @@ const authenticate: RequestHandler = async (
 
     if (!user) {
       return next(
-        new ApiError(
-          StatusCodes.UNAUTHORIZED,
-          req.t?.("auth.user_not_found") || "User not found",
-        ),
+        new ApiError(StatusCodes.UNAUTHORIZED, req.t?.('auth.user_not_found') || 'User not found')
       );
     }
 
@@ -50,13 +46,10 @@ const authenticate: RequestHandler = async (
 
     next();
   } catch (err) {
-    console.error("Authentication error:", err);
+    console.error('Authentication error:', err);
 
     return next(
-      new ApiError(
-        StatusCodes.UNAUTHORIZED,
-        req.t?.("auth.auth_failed") || "Authentication failed",
-      ),
+      new ApiError(StatusCodes.UNAUTHORIZED, req.t?.('auth.auth_failed') || 'Authentication failed')
     );
   }
 };

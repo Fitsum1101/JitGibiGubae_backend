@@ -1,10 +1,10 @@
-import type { Request, Response, NextFunction, RequestHandler } from "express";
-import Joi, { type Schema } from "joi";
-import lodash from "lodash";
-import { StatusCodes } from "http-status-codes";
+import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import Joi, { type Schema } from 'joi';
+import lodash from 'lodash';
+import { StatusCodes } from 'http-status-codes';
 
 const { pick } = lodash;
-import { ApiError } from "../utils/apiError";
+import { ApiError } from '../utils/apiError';
 
 /**
  * Validation middleware factory function
@@ -27,7 +27,7 @@ interface JoiErrorDetail {
 
 const validate = (schema: ValidationSchema): RequestHandler => {
   return (req: Request, _res: Response, next: NextFunction) => {
-    const validSchema = pick(schema, ["params", "query", "body"]);
+    const validSchema = pick(schema, ['params', 'query', 'body']);
     const object = pick(req, Object.keys(validSchema));
 
     const {
@@ -37,22 +37,22 @@ const validate = (schema: ValidationSchema): RequestHandler => {
       value: Record<string, unknown>;
       error: Joi.ValidationError | undefined;
     } = Joi.compile(validSchema)
-      .prefs({ errors: { label: "key" }, abortEarly: false })
+      .prefs({ errors: { label: 'key' }, abortEarly: false })
       .validate(object);
 
     if (error) {
       const errorDetails: JoiErrorDetail[] = error.details.map((err: Joi.ValidationErrorItem) => {
         const pathParts = err.path.slice(1);
-        const field = pathParts.length > 0 ? pathParts.join(".") : err.context?.key || "unknown";
+        const field = pathParts.length > 0 ? pathParts.join('.') : err.context?.key || 'unknown';
 
         return {
           field,
-          message: err.message.replace(/['"]/g, ""),
+          message: err.message.replace(/['"]/g, ''),
           type: err.type,
         };
       });
 
-      const errorMessage = req.t ? req.t("validation.failed") : "Validation failed";
+      const errorMessage = req.t ? req.t('validation.failed') : 'Validation failed';
       return next(new ApiError(StatusCodes.BAD_REQUEST, errorMessage, errorDetails));
     }
 

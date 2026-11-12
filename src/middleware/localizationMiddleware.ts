@@ -1,16 +1,16 @@
-import i18next from "i18next";
-import * as middleware from "i18next-http-middleware";
-import ICU from "i18next-icu";
+import i18next from 'i18next';
+import * as middleware from 'i18next-http-middleware';
+import ICU from 'i18next-icu';
 
-import { locales } from "../locales/index";
+import { locales } from '../locales/index';
 
 i18next
   .use(ICU)
   .use(middleware.LanguageDetector)
   .init({
-    fallbackLng: "en",
-    supportedLngs: ["en", "am"],
-    preload: ["en", "am"],
+    fallbackLng: 'en',
+    supportedLngs: ['en', 'am'],
+    preload: ['en', 'am'],
 
     resources: {
       en: {
@@ -22,18 +22,18 @@ i18next
     },
 
     detection: {
-      order: ["querystring", "header"],
-      lookupQuerystring: "lng",
+      order: ['querystring', 'header'],
+      lookupQuerystring: 'lng',
       caches: false,
     },
 
-    debug: process.env.NODE_ENV === "development",
+    debug: process.env.NODE_ENV === 'development',
     interpolation: {
       escapeValue: false,
     },
   })
   .catch((error: Error) => {
-    console.error("Failed to initialize i18next:", error);
+    console.error('Failed to initialize i18next:', error);
     process.exit(1);
   });
 

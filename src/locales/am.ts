@@ -1,4 +1,4 @@
-import authAm from "./auth/am.json";
+import authAm from './auth/am.json';
 
 export default {
   ...authAm,

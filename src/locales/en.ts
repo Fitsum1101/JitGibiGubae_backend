@@ -1,4 +1,4 @@
-import authEn from "./auth/en.json";
+import authEn from './auth/en.json';
 
 export default {
   ...authEn,

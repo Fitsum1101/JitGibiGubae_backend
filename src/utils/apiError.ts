@@ -1,4 +1,4 @@
-import type { IApiError } from "../types/apiError";
+import type { IApiError } from '../types/apiError';
 
 /**
  * Custom error class for handling API errors.
@@ -9,7 +9,7 @@ export class ApiError extends Error implements IApiError {
   errors: unknown[];
 
   constructor(statusCode: number, message: string, errors: unknown[] = [], stack?: string) {
-    super(message || "Something went wrong");
+    super(message || 'Something went wrong');
     this.statusCode = statusCode;
     this.success = false;
     this.errors = errors;
