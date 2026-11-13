@@ -2,23 +2,20 @@
 import 'dotenv/config';
 
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 
 import { i18nMiddleware } from './middleware/localizationMiddleware';
 import { errorHandler, notFoundHandler } from './utils/errorHandler';
+import { dirname } from './utils/filepath.';
 
-errorHandler;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const app = express();
 
 // Trust proxy configuration
 app.set('trust proxy', 1);
 
-// app.use(cors());
+app.use(cors());
 
 // ===== 🌐 CORS Middleware Setup =====
 const allowedOrigins = process.env.FRONTEND_URL_CORS?.split(',').map((origin) => origin.trim());
@@ -35,7 +32,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(i18nMiddleware);
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(dirname, '../public')));
 
 app.get('/', (req: Request, res: Response) => {
   const response = {
@@ -44,6 +41,10 @@ app.get('/', (req: Request, res: Response) => {
   };
 
   res.json(response);
+});
+
+app.get('/health', (req: Request, res: Response) => {
+  res.json({ status: 'ok' });
 });
 
 // Error Handling
